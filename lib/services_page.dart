@@ -1,233 +1,178 @@
 import 'package:flutter/material.dart';
 
-class ServiceItem {
-  final IconData icon;
-  final Color iconColor;
-  final String name;
-  final String description;
-
-  const ServiceItem({
-    required this.icon,
-    required this.iconColor,
-    required this.name,
-    required this.description,
-  });
-}
-
 class ServicesPage extends StatelessWidget {
   const ServicesPage({super.key});
-
-  static const List<ServiceItem> services = [
-    ServiceItem(
-      icon: Icons.support_agent_outlined,
-      iconColor: Color(0xFF0095F6),
-      name: 'Help Center',
-      description: 'Get answers to common questions and support topics.',
-    ),
-    ServiceItem(
-      icon: Icons.mail_outline,
-      iconColor: Color(0xFFE1306C),
-      name: 'Contact Us',
-      description: 'Reach out to our team for assistance or inquiries.',
-    ),
-    ServiceItem(
-      icon: Icons.feedback_outlined,
-      iconColor: Color(0xFF833AB4),
-      name: 'Send Feedback',
-      description: 'Share your ideas to help us improve the app experience.',
-    ),
-    ServiceItem(
-      icon: Icons.report_outlined,
-      iconColor: Color(0xFFFD1D1D),
-      name: 'Report a Problem',
-      description: 'Let us know if something is not working as expected.',
-    ),
-    ServiceItem(
-      icon: Icons.privacy_tip_outlined,
-      iconColor: Color(0xFF5851DB),
-      name: 'Privacy Policy',
-      description: 'Learn how we collect, use, and protect your data.',
-    ),
-    ServiceItem(
-      icon: Icons.description_outlined,
-      iconColor: Color(0xFF262626),
-      name: 'Terms of Service',
-      description: 'Review the rules and guidelines for using this app.',
-    ),
-  ];
-
-  void _onServiceTap(BuildContext context, ServiceItem service) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('You tapped: ${service.name}'),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEFEFEF),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 450),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 20,
-                  spreadRadius: 2,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+      // 1. Top App Bar
+      appBar: AppBar(
+        title: const Text(
+          'Contact & Services',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 1,
+      ),
+
+      // 2. Main Body - Scrollable List
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          // Header Section
+          const Text(
+            'How can we help you?',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
             ),
-            child: Scaffold(
-              backgroundColor: Colors.white,
-              appBar: AppBar(
-                backgroundColor: Colors.white,
-                elevation: 0.5,
-                centerTitle: true,
-                title: const Text(
-                  'Services',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: -0.3,
-                    color: Colors.black,
-                  ),
-                ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'Explore our support services and help topics below.',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // --- Service 1: Help Center ---
+          _buildServiceCard(
+            context: context,
+            icon: Icons.help_outline,
+            iconColor: Colors.blue,
+            title: 'Help Center',
+            description: 'Get instant answers to frequently asked questions.',
+          ),
+          const SizedBox(height: 12),
+
+          // --- Service 2: Contact Us ---
+          _buildServiceCard(
+            context: context,
+            icon: Icons.mail_outline,
+            iconColor: Colors.pink,
+            title: 'Contact Us',
+            description: 'Send an email or message directly to our support team.',
+          ),
+          const SizedBox(height: 12),
+
+          // --- Service 3: Send Feedback ---
+          _buildServiceCard(
+            context: context,
+            icon: Icons.feedback_outlined,
+            iconColor: Colors.purple,
+            title: 'Send Feedback',
+            description: 'Share your suggestions to help us improve the app.',
+          ),
+          const SizedBox(height: 12),
+
+          // --- Service 4: Report a Problem ---
+          _buildServiceCard(
+            context: context,
+            icon: Icons.report_problem_outlined,
+            iconColor: Colors.red,
+            title: 'Report a Problem',
+            description: 'Let us know if you encounter any bugs or errors.',
+          ),
+          const SizedBox(height: 12),
+
+          // --- Service 5: Privacy Policy ---
+          _buildServiceCard(
+            context: context,
+            icon: Icons.lock_outline,
+            iconColor: Colors.indigo,
+            title: 'Privacy Policy',
+            description: 'Learn how we protect and manage your personal data.',
+          ),
+          const SizedBox(height: 12),
+
+          // --- Service 6: Terms of Service ---
+          _buildServiceCard(
+            context: context,
+            icon: Icons.article_outlined,
+            iconColor: Colors.teal,
+            title: 'Terms of Service',
+            description: 'Read the rules and terms for using this platform.',
+          ),
+        ],
+      ),
+    );
+  }
+
+  // --- Helper Method to Create a Service Card ---
+  // Each card contains: 1. Icon, 2. Title, 3. Description, 4. Button/Arrow
+  Widget _buildServiceCard({
+    required BuildContext context,
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required String description,
+  }) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(14.0),
+        child: Row(
+          children: [
+            // 1. Icon inside a colored box
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(10),
               ),
-              body: Column(
+              child: Icon(icon, color: iconColor, size: 28),
+            ),
+            const SizedBox(width: 14),
+
+            // 2. Title & Short Description
+            Expanded(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'How can we help?',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          'Explore support options and app information.',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                      ],
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Expanded(
-                    child: ListView.separated(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      itemCount: services.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 12),
-                      itemBuilder: (context, index) {
-                        final service = services[index];
-                        return _ServiceCard(
-                          service: service,
-                          onTap: () => _onServiceTap(context, service),
-                        );
-                      },
+                  const SizedBox(height: 4),
+                  Text(
+                    description,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey[600],
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+            const SizedBox(width: 8),
 
-class _ServiceCard extends StatelessWidget {
-  final ServiceItem service;
-  final VoidCallback onTap;
-
-  const _ServiceCard({
-    required this.service,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      color: const Color(0xFFFAFAFA),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-        side: BorderSide(color: Colors.grey.shade200),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: service.iconColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  service.icon,
-                  color: service.iconColor,
-                  size: 26,
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      service.name,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      service.description,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey.shade600,
-                        height: 1.3,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              IconButton(
-                onPressed: onTap,
-                icon: Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: Colors.grey.shade500,
-                ),
-              ),
-            ],
-          ),
+            // 3. Arrow Button (Interactive UI feedback)
+            IconButton(
+              icon: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+              onPressed: () {
+                // Show simple feedback popup on tap
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('$title tapped!'),
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

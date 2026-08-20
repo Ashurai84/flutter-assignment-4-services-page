@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-// Model representing an Instagram Post
+// --- Data Model for an Instagram Post ---
 class PostItem {
   final String username;
   final String userAvatar;
@@ -30,296 +23,216 @@ class PostItem {
   });
 }
 
+// --- Home Page (Instagram Feed) ---
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
 class _HomePageState extends State<HomePage> {
+  // Sample posts data
   final List<PostItem> posts = [
     PostItem(
       username: 'ashutosh_rai',
       userAvatar: 'assets/images/aws_event.jpg',
       location: 'AWS Community Event • Tech Summit',
       imagePath: 'assets/images/aws_event.jpg',
-      caption: 'Had an incredible time attending the AWS event! Explored cloud architectures, AI tools, and networking with fellow engineers. ☁️🚀 #AWS #CloudComputing #TechSummit',
+      caption: 'Had an incredible time attending the AWS event! Explored cloud architectures and AI tools. ☁️🚀',
       timeAgo: '2 HOURS AGO',
       likes: 128,
     ),
     PostItem(
       username: 'ashutosh_rai',
       userAvatar: 'assets/images/bba_teaching.jpg',
-      location: 'Classroom • Tech Education Series',
+      location: 'Classroom • Tech Education',
       imagePath: 'assets/images/bba_teaching.jpg',
-      caption: 'Mentoring BBA students today! Introducing computational thinking, digital tools, and tech fundamentals. 📚✨ #Teaching #StudentEmpowerment #TechEducation',
+      caption: 'Mentoring BBA students today! Introducing digital tools and computational thinking. 📚✨',
       timeAgo: '5 HOURS AGO',
       likes: 95,
-    ),
-    PostItem(
-      username: 'ashutosh_rai',
-      userAvatar: 'assets/images/bba_team_teaching.jpg',
-      location: 'Innovation Lab • Team Workshop',
-      imagePath: 'assets/images/bba_team_teaching.jpg',
-      caption: 'Team in action! 👥⚡ Our team conducted an interactive session for BBA students explaining what is automation, how modern AI models work, and practical ways to use AI in business. #TeamWork #Automation #AIForBusiness',
-      timeAgo: '1 DAY AGO',
-      likes: 240,
-    ),
-    PostItem(
-      username: 'ashutosh_rai',
-      userAvatar: 'assets/images/mba_teaching.jpg',
-      location: 'Management Block • Masterclass',
-      imagePath: 'assets/images/mba_teaching.jpg',
-      caption: 'Hands-on masterclass with MBA students: teaching workflow automation using n8n! 🔄📈 Connected APIs, automated email workflows, and built self-operating pipelines. #n8n #NoCode #MBAWorkshops #Automation',
-      timeAgo: '2 DAYS AGO',
-      likes: 385,
     ),
     PostItem(
       username: 'ashutosh_rai',
       userAvatar: 'assets/images/diwali_event.jpg',
       location: 'Campus Celebration • Festive Moments',
       imagePath: 'assets/images/diwali_event.jpg',
-      caption: 'Celebrating Diwali with amazing people and colleagues! Wishing everyone light, prosperity, and joy! 🪔✨ #DiwaliCelebration #CampusLife #FestiveVibes',
+      caption: 'Celebrating Diwali with amazing people! Wishing everyone happiness and prosperity! 🪔✨',
       timeAgo: '3 DAYS AGO',
       likes: 450,
     ),
   ];
 
+  // Function to toggle Like on a post
   void _likePost(int index) {
     setState(() {
-      posts[index].likes++;
-      posts[index].isLiked = true;
+      if (posts[index].isLiked) {
+        posts[index].likes--;
+        posts[index].isLiked = false;
+      } else {
+        posts[index].likes++;
+        posts[index].isLiked = true;
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEFEFEF), 
+      backgroundColor: Colors.white,
 
-
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 450, // Mobile device width
+      // 1. Top App Bar
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 1,
+        title: const Text(
+          'Instagram',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
           ),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
-                  blurRadius: 20,
-                  spreadRadius: 2,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Scaffold(
-              backgroundColor: Colors.white,
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.favorite_border, color: Colors.black),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.send_outlined, color: Colors.black),
+            onPressed: () {},
+          ),
+        ],
+      ),
 
-              // Mobile App Bar (Nicely aligned within mobile width)
-              appBar: AppBar(
-                backgroundColor: Colors.white,
-                elevation: 0.5,
-                title: const Text(
-                  'Instagram',
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: -0.5,
-                    color: Colors.black,
-                  ),
+      // 2. Scrollable Posts Feed
+      body: ListView.builder(
+        itemCount: posts.length,
+        itemBuilder: (context, index) {
+          final post = posts[index];
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Post Header: Profile Pic + Username + Location
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 18,
+                      backgroundImage: AssetImage(post.userAvatar),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            post.username,
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                          ),
+                          Text(
+                            post.location,
+                            style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.more_vert, size: 20),
+                      onPressed: () {},
+                    ),
+                  ],
                 ),
-                actions: [
+              ),
+
+              // Post Main Image
+              Image.asset(
+                post.imagePath,
+                width: double.infinity,
+                height: 350,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 350,
+                    color: Colors.grey[200],
+                    child: const Center(
+                      child: Icon(Icons.image, size: 50, color: Colors.grey),
+                    ),
+                  );
+                },
+              ),
+
+              // Action Buttons Row: Like, Comment, Share, Bookmark
+              Row(
+                children: [
                   IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.favorite_border, size: 26, color: Colors.black),
+                    icon: Icon(
+                      post.isLiked ? Icons.favorite : Icons.favorite_border,
+                      color: post.isLiked ? Colors.red : Colors.black,
+                    ),
+                    onPressed: () => _likePost(index),
                   ),
                   IconButton(
+                    icon: const Icon(Icons.chat_bubble_outline),
                     onPressed: () {},
-                    icon: const Icon(Icons.send_outlined, size: 26, color: Colors.black),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.send_outlined),
+                    onPressed: () {},
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.bookmark_border),
+                    onPressed: () {},
                   ),
                 ],
               ),
 
-              // Scrollable Feed
-              body: ListView.builder(
-                itemCount: posts.length,
-                itemBuilder: (context, index) {
-                  final post = posts[index];
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // 1. Profile Header Row
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundImage: AssetImage(post.userAvatar),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    post.username,
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    post.location,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.more_vert),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // 2. Post Image (Actual Photo)
-                      Image.asset(
-                        post.imagePath,
-                        width: double.infinity,
-                        height: 380,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            height: 380,
-                            color: Colors.grey.shade200,
-                            child: const Center(
-                              child: Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
-                            ),
-                          );
-                        },
-                      ),
-
-                      // 3. Action Buttons Row (Like, Comment, Share, Save)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                        child: Row(
-                          children: [
-                            // Like Icon Button
-                            IconButton(
-                              onPressed: () => _likePost(index),
-                              icon: Icon(
-                                post.isLiked ? Icons.favorite : Icons.favorite_border,
-                                size: 28,
-                                color: post.isLiked ? Colors.red : Colors.black,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.chat_bubble_outline, size: 25),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.send_outlined, size: 25),
-                            ),
-                            const Spacer(),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.bookmark_border, size: 26),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // 4. Likes Count
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          '${post.likes} likes',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-
-                      // 5. Caption
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: RichText(
-                          text: TextSpan(
-                            style: const TextStyle(color: Colors.black87, fontSize: 14),
-                            children: [
-                              TextSpan(
-                                text: '${post.username} ',
-                                style: const TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(text: post.caption),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-
-                      // 6. Time ago
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          post.timeAgo,
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey.shade500,
-                            letterSpacing: 0.2,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-
-                      // 7. Large Interactive "Like" ElevatedButton
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            onPressed: () => _likePost(index),
-                            icon: Icon(
-                              Icons.favorite,
-                              color: post.isLiked ? Colors.red : Colors.grey,
-                              size: 20,
-                            ),
-                            label: Text(
-                              'Like Post (+1)',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: post.isLiked ? Colors.red.shade700 : Colors.black87,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: post.isLiked ? Colors.red.shade50 : Colors.grey.shade100,
-                              elevation: 0,
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 18),
-                      const Divider(height: 1, thickness: 8, color: Color(0xFFF2F2F2)),
-                    ],
-                  );
-                },
+              // Likes Count
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  '${post.likes} likes',
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
               ),
-            ),
-          ),
-        ),
+              const SizedBox(height: 4),
+
+              // Caption
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: RichText(
+                  text: TextSpan(
+                    style: const TextStyle(color: Colors.black87, fontSize: 13),
+                    children: [
+                      TextSpan(
+                        text: '${post.username} ',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(text: post.caption),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 4),
+
+              // Time Ago
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  post.timeAgo,
+                  style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Divider between posts
+              const Divider(height: 1, thickness: 6, color: Color(0xFFF0F0F0)),
+            ],
+          );
+        },
       ),
     );
   }
