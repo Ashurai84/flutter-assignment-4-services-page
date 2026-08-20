@@ -66,8 +66,8 @@ assets/
 ### Run the app
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/flutter-instagram-services-ui.git
-cd flutter-instagram-services-ui
+git clone https://github.com/Ashurai84/flutter-assignment-4-services-page.git
+cd flutter-assignment-4-services-page
 flutter pub get
 flutter run
 ```
